@@ -1,6 +1,6 @@
-package com.ps.petappbe.auth.repository;
+package com.ps.petappbe.users.repository;
 
-import com.ps.petappbe.auth.model.User;
+import com.ps.petappbe.users.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
