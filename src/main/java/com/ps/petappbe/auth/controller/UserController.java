@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-@CrossOrigin(origins = "http://localhost:8081")
+
+
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -51,7 +53,7 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
-            User _user  = userRepository.save(new User(user.getUsername(), user.getPassword(), false));
+            User _user  = userRepository.save(new User(user.getId(),user.getUsername(), user.getPassword(), false));
             return new ResponseEntity<>(_user, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -85,7 +87,7 @@ public class UserController {
 
 
     @GetMapping("/users/business")
-    public ResponseEntity<List<User>> findByPublished() {
+    public ResponseEntity<List<User>> findByBusinessAccount() {
         try {
             List<User> users = userRepository.findByBusinessAccount(true);
 
