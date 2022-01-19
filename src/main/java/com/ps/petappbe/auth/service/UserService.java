@@ -4,31 +4,34 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
 import com.ps.petappbe.auth.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserService implements UserDetails {
+
     private static final long serialVersionUID = 1L;
-
     private String id;
-
     private String username;
-
     private String email;
-
     @JsonIgnore
     private String password;
 
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JavaMailSender mailSender;
+
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserService(String id, String username, String email, String password,
-                       Collection<? extends GrantedAuthority> authorities) {
+
+    public UserService(String id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -37,6 +40,7 @@ public class UserService implements UserDetails {
     }
 
     public static UserService build(User user) {
+
         List<GrantedAuthority> authorities = user.getProfiles().stream()
                 .map(profile -> new SimpleGrantedAuthority(profile.getProfile().name()))
                 .collect(Collectors.toList());

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/index")
 public class IndexController {
+
     @GetMapping("/")
     public String index() {
         return "Index (no auth).";

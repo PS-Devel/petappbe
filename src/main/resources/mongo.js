@@ -6,7 +6,7 @@ db.profiles.insertMany([
 db.users.insertOne(
    {
     "username": "test-user-uno",
-    "email": "tnprR7ioPvgy@mail.it",
+    "email": "l.stagliano@gmail.com",
     "password": "teseS!!3"
 });
 db.users.insertOne(

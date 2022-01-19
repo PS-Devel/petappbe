@@ -1,39 +1,33 @@
 package com.ps.petappbe.auth.controller;
-import com.ps.petappbe.auth.model.request.LoginRequest;
-import com.ps.petappbe.auth.model.request.CreateUserRequest;
-import com.ps.petappbe.auth.model.response.MessageResponse;
-import com.ps.petappbe.auth.model.Profile;
+
+
 import com.ps.petappbe.auth.model.User;
-import com.ps.petappbe.auth.model.UserProfile;
+import com.ps.petappbe.auth.model.request.LoginRequest;
 import com.ps.petappbe.auth.model.response.UserResponse;
 import com.ps.petappbe.auth.repository.ProfileRepository;
 import com.ps.petappbe.auth.repository.UserRepository;
-import com.ps.petappbe.configuration.security.JwTokentUtils;
+import com.ps.petappbe.auth.service.ActivationUserServiceImpl;
 import com.ps.petappbe.auth.service.UserService;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ps.petappbe.configuration.security.JwTokentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
-
-
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -41,7 +35,8 @@ import javax.validation.Valid;
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
-
+    @Autowired
+    ActivationUserServiceImpl activationService;
     @Autowired
     UserRepository userRepository;
 
@@ -50,6 +45,11 @@ public class AuthController {
 
     @Autowired
     PasswordEncoder encoder;
+
+
+    @Autowired
+    private JavaMailSender mailSender;
+
 
     @Autowired
     JwTokentUtils jwTokentUtils;
@@ -78,50 +78,39 @@ public class AuthController {
     }
 
     @PostMapping("/createUser")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody CreateUserRequest signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Username already presents!"));
-        }
+    public String create(User user, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Email already presents!"));
-        }
+        if (userRepository.existsByUsername(user.getUsername())) {
 
-        User user = new User(signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
+            return "User already exists";
 
-        List<String> strProfile = signUpRequest.getProfiles();
-        Set<Profile> profiles = new HashSet<>();
+        } else if (userRepository.existsByEmail(user.getEmail())) {
 
-        if (strProfile == null) {
-            Profile userProfile = profileRepository.findByProfile(UserProfile.PROFILE_BASIC)
-                    .orElseThrow(() -> new RuntimeException("Profile not found."));
-            profiles.add(userProfile);
+            return "Email already exists";
+
         } else {
-            strProfile.forEach(profile -> {
-                switch (profile) {
-                    case "business":
-                        Profile businessProfile = profileRepository.findByProfile(UserProfile.PROFILE_BUSINESS)
-                                .orElseThrow(() -> new RuntimeException("Profile not found."));
-                        profiles.add(businessProfile);
 
-                        break;
-                    default:
-                        Profile userProfile = profileRepository.findByProfile(UserProfile.PROFILE_BASIC)
-                                .orElseThrow(() -> new RuntimeException("Profile not found."));
-                        profiles.add(userProfile);
-                }
-            });
+            activationService.register(user, getSiteURL(request));
+
+            return " User created successfully!";
         }
-
-        user.setProfiles(profiles);
-        userRepository.save(user);
-
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+
+    private String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
+    }
+
+
+    @GetMapping("/verify")
+    public String verifyUser(@Param("verificationCode") String verificationCode) {
+
+        if (activationService.verify(verificationCode)) {
+
+            return "active";
+        } else {
+                return "Inactive";
+        }
+    }
+
 }

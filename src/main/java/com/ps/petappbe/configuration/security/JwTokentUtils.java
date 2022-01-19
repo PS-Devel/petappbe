@@ -1,10 +1,8 @@
 package com.ps.petappbe.configuration.security;
 
 import java.util.Date;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-
 import com.ps.petappbe.auth.service.UserService;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;

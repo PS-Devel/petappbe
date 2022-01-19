@@ -10,7 +10,9 @@ public class Profile {
 
     @Id
     private String id;
+
     private UserProfile profile;
+
     public Profile() {
 
     }

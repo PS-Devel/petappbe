@@ -2,7 +2,6 @@ package com.ps.petappbe.auth.model.response;
 
 
 import lombok.Data;
-
 import java.util.List;
 
 @Data
