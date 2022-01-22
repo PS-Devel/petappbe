@@ -1,0 +1,15 @@
+server:
+  port: 9091
+
+spring:
+  application:
+    name: AUTHSERVICE
+  config:
+    import: "configserver:http://localhost:9296"
+  zipkin:
+    base-url: http://localhost:9411/
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: petapp
