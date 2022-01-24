@@ -15,3 +15,6 @@ spring:
       host: localhost
       port: 27017
       database: petapp
+  springdoc:
+    swagger-ui:
+      path: /swagger-ui.html
