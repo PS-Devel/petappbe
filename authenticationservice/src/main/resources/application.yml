@@ -1,5 +1,7 @@
 server:
   port: 9091
+  servlet:
+    context-path: /pet-app/
 
 spring:
   application:
