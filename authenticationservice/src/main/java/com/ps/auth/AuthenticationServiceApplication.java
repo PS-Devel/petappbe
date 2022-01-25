@@ -1,4 +1,4 @@
-package com.ps.petappbe;
+package com.ps.auth;
 
 
 import org.springframework.boot.SpringApplication;
