@@ -1,14 +1,14 @@
-package com.ps.petappbe.auth.controller;
+package com.ps.auth.controller;
 
 
-import com.ps.petappbe.auth.model.User;
-import com.ps.petappbe.auth.model.request.LoginRequest;
-import com.ps.petappbe.auth.model.response.UserResponse;
-import com.ps.petappbe.auth.repository.ProfileRepository;
-import com.ps.petappbe.auth.repository.UserRepository;
-import com.ps.petappbe.auth.service.ActivationUserServiceImpl;
-import com.ps.petappbe.auth.service.UserService;
-import com.ps.petappbe.configuration.security.JwTokentUtils;
+import com.ps.auth.model.User;
+import com.ps.auth.repository.ProfileRepository;
+import com.ps.auth.repository.UserRepository;
+import com.ps.auth.request.LoginRequest;
+import com.ps.auth.response.UserResponse;
+import com.ps.auth.service.ActivationUserServiceImpl;
+import com.ps.auth.service.UserService;
+import com.ps.auth.configuration.security.JwTokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +18,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +53,7 @@ public class AuthController {
 
 
     @Autowired
-    JwTokentUtils jwTokentUtils;
+    JwTokenUtils jwTokentUtils;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -67,7 +68,7 @@ public class AuthController {
         ResponseCookie jwtCookie = jwTokentUtils.generateJwtCookie(userDetails);
 
         List<String> profiles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())

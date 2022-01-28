@@ -1,5 +1,6 @@
 package com.ps.auth.service;
 
+
 import com.ps.auth.model.User;
 import com.ps.auth.repository.UserRepository;
 import net.bytebuddy.utility.RandomString;
@@ -8,6 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
@@ -16,7 +18,7 @@ import java.io.UnsupportedEncodingException;
 public class ActivationUserServiceImpl {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository repo;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -30,7 +32,7 @@ public class ActivationUserServiceImpl {
         String randomCode = RandomString.make(64);
         user.setVerificationCode(randomCode);
         user.setActiveUser(false);
-        userRepository.save(user);
+        repo.save(user);
 
         sendVerificationEmail(user, siteURL);
     }
@@ -61,8 +63,9 @@ public class ActivationUserServiceImpl {
 
     }
 
+
     public boolean verify(String verificationCode) {
-        User user = userRepository.findByVerificationCode(verificationCode);
+        User user = repo.findByVerificationCode(verificationCode);
 
         if (user == null || user.isActiveUser()) {
 
@@ -70,10 +73,11 @@ public class ActivationUserServiceImpl {
         } else {
             user.setVerificationCode(null);
             user.setActiveUser(true);
-            userRepository.save(user);
+            repo.save(user);
 
             return true;
         }
+
     }
 
 }
