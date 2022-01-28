@@ -1,20 +1,12 @@
 package com.ps.auth.controller;
 
 
+import com.ps.auth.configuration.security.JwTokenUtils;
 import com.ps.auth.model.User;
 import com.ps.auth.repository.ProfileRepository;
 import com.ps.auth.repository.UserRepository;
 import com.ps.auth.request.LoginRequest;
 import com.ps.auth.response.UserResponse;
-import com.ps.auth.service.ActivationUserServiceImpl;
-import com.ps.auth.service.UserService;
-import com.ps.auth.configuration.security.JwTokenUtils;
-import com.ps.auth.configuration.security.JwTokenUtils;
-import com.ps.auth.model.User;
-import com.ps.auth.request.LoginRequest;
-import com.ps.auth.response.UserResponse;
-import com.ps.auth.repository.ProfileRepository;
-import com.ps.auth.repository.UserRepository;
 import com.ps.auth.service.ActivationUserServiceImpl;
 import com.ps.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
