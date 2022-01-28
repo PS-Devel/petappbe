@@ -9,6 +9,14 @@ import com.ps.auth.response.UserResponse;
 import com.ps.auth.service.ActivationUserServiceImpl;
 import com.ps.auth.service.UserService;
 import com.ps.auth.configuration.security.JwTokenUtils;
+import com.ps.auth.configuration.security.JwTokenUtils;
+import com.ps.auth.model.User;
+import com.ps.auth.request.LoginRequest;
+import com.ps.auth.response.UserResponse;
+import com.ps.auth.repository.ProfileRepository;
+import com.ps.auth.repository.UserRepository;
+import com.ps.auth.service.ActivationUserServiceImpl;
+import com.ps.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
@@ -34,6 +42,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
@@ -93,7 +102,7 @@ public class AuthController {
 
             activationService.register(user, getSiteURL(request));
 
-            return " User created successfully!";
+            return "User created successfully!";
         }
     }
 
@@ -110,7 +119,7 @@ public class AuthController {
 
             return "active";
         } else {
-                return "Inactive";
+            return "Inactive";
         }
     }
 
