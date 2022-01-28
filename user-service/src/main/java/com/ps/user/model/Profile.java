@@ -1,5 +1,6 @@
 package com.ps.user.model;
 
+import com.ps.user.model.enumerator.UserProfilesEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;

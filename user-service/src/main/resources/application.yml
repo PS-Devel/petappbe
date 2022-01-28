@@ -5,7 +5,7 @@ server:
 
 spring:
   application:
-    name: AUTHSERVICE
+    name: USERSSERVICE
   config:
     import: "configserver:http://localhost:9296"
   zipkin:

@@ -1,13 +1,9 @@
-package com.ps.user.model;
+package com.ps.user.dto;
 
-import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -18,29 +14,23 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "users")
-public class User {
-
-    @Id
-    private String id;
+public class CreateUserDto {
 
     @NotBlank
-    @Size(max = 20)
+    @Size(min = 5, max = 15)
     private String username;
 
     @NotBlank
-    @Size(max = 50)
+    @Size(max = 30)
     @Email
     private String email;
 
     @NotBlank
-    @Size(max = 120)
+    @Size(min = 6, max = 40)
     private String password;
 
-    @DBRef
-    private Set<Profile> profiles = Sets.newHashSet();
-
+    private Set<String> profiles;
     private String verificationCode;
-
     private boolean isActiveUser;
+
 }

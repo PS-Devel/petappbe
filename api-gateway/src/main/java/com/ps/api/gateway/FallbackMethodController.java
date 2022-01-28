@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class FallbackMethodController {
 
-    @GetMapping("/authServiceFallback")
-    public String pingServiceFallbackMethod() {
-        return "Authentication Service is down.";
+    @GetMapping("/users-service-fallback")
+    public String usersServiceFallbackMethod() {
+        return "Users Service is down.";
     }
 
 }

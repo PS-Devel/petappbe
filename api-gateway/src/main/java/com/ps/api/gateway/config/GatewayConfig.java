@@ -16,22 +16,12 @@ import java.time.Duration;
 public class GatewayConfig {
 
     @Bean
-    public RouteLocator authRoute(RouteLocatorBuilder routeLocatorBuilder) {
-        return routeLocatorBuilder.routes()
-                .route(p -> p
-                        .path("/auth/**")
-                        .filters(f -> f.circuitBreaker(c -> c.setName("CircuitBreaker").setFallbackUri("/authServiceFallback")))
-                        .uri("lb://AUTHSERVICE"))
-                .build();
-    }
-
-    @Bean
     public RouteLocator usersRoute(RouteLocatorBuilder routeLocatorBuilder) {
         return routeLocatorBuilder.routes()
                 .route(p -> p
-                        .path("/users/**")
-                        .filters(f -> f.circuitBreaker(c -> c.setName("CircuitBreaker").setFallbackUri("/authServiceFallback")))
-                        .uri("lb://AUTHSERVICE"))
+                        .path("/api/users/**")
+                        .filters(f -> f.circuitBreaker(c -> c.setName("CircuitBreaker").setFallbackUri("/users-service-fallback")))
+                        .uri("lb://USERSSERVICE"))
                 .build();
     }
 
