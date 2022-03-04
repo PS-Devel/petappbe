@@ -41,7 +41,7 @@ public class CustomMessageDeserializer implements Deserializer {
                 return null;
         }
 
-        // Non voglio che si possa passare qualsiasi cosa, il messaggio deve implementare l'interfaccia PetMessage.
+        //Non voglio che si possa passare qualsiasi cosa, il messaggio deve implementare l'interfaccia PetMessage.
         return PetMessage.class.isAssignableFrom(clazz)
                 ? clazz
                 : null;
