@@ -18,19 +18,10 @@ spring:
   springdoc:
     swagger-ui:
       path: /swagger-ui.html
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: piessedev@gmail.com
-    password: SDE333w!
-    protocol: smtp
-    tls: true
-    properties.mail.smtp:
-      auth: true
-      starttls.enable: true
-      ssl.trust: smtp.gmail.com
   jwt:
     header: Authorization
     cookie: pet-cookie
     secret: pet-app-secret-key
     expiration: 604800
+  kafka:
+    bootstrap-servers: localhost:9096

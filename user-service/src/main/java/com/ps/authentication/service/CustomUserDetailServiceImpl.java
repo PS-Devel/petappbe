@@ -14,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserDetailsService {
+@Transactional
+public class CustomUserDetailServiceImpl implements UserDetailsService {
 
     @Setter(onMethod = @__({@Autowired}))
     private UserRepository userRepository;
 
     @Override
-    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> userOptional = userRepository.findByUsername(username);
 
@@ -28,5 +28,4 @@ public class UserServiceImpl implements UserDetailsService {
 
         return CustomUserDetails.build(user);
     }
-
 }

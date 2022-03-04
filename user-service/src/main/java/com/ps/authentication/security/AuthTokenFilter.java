@@ -1,6 +1,6 @@
 package com.ps.authentication.security;
 
-import com.ps.authentication.service.UserServiceImpl;
+import com.ps.authentication.service.CustomUserDetailServiceImpl;
 import com.ps.authentication.utils.JwTokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +22,12 @@ import java.io.IOException;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthTokenFilter extends OncePerRequestFilter {
 
+    @Autowired
     private JwTokenUtils jwTokenUtils;
-    private UserServiceImpl userDetailsService;
+    private CustomUserDetailServiceImpl userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
             if (jwt != null && jwTokenUtils.validateJwtToken(jwt)) {

@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService {
 
         String randomCode = RandomString.make(64);
         user.setVerificationCode(randomCode);
+        user.setActiveUser(false);
 
         return userRepository.save(user);
     }
@@ -50,7 +51,7 @@ public class UserServiceImpl implements UserService {
         Assert.hasText(baseUrl);
         Assert.notNull(user.getId());
 
-        return baseUrl + "/api/auth/verify?verificationCode=" + user.getVerificationCode();
+        return baseUrl + "/api/users/activate/token/" + user.getVerificationCode();
     }
 
     @Override
@@ -61,6 +62,8 @@ public class UserServiceImpl implements UserService {
 
         user.setActiveUser(true);
         user.setVerificationCode(null);
+
+        userRepository.save(user);
     }
 
     private void checkUser(CreateUserDto toCreate) {

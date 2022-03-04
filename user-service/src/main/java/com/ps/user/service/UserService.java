@@ -9,4 +9,5 @@ public interface UserService {
     String generateToken(String baseUrl, User user);
 
     void activateUser(String token);
+
 }
