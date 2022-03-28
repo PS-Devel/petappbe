@@ -8,9 +8,9 @@
         <relativePath/>
     </parent>
     <groupId>com.ps</groupId>
-    <artifactId>authenticationservice</artifactId>
+    <artifactId>user-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>authenticationservice</name>
+    <name>user-service</name>
     <description>User authentication Spring Boot module</description>
     <properties>
         <java.version>11</java.version>

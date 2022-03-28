@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.stefanopisano</groupId>
-    <artifactId>pingpong-api-gateway</artifactId>
+    <artifactId>api-gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>pingpong-api-gateway</name>
-    <description>pingpong-api-gateway</description>
+    <name>api-gateway</name>
+    <description>api-gateway</description>
     <properties>
         <java.version>11</java.version>
         <spring-cloud.version>2021.0.0</spring-cloud.version>
