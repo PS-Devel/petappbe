@@ -14,6 +14,5 @@ public class EmailComposeDto {
     private String senderName;
     private String from;
     private String to;
-    private String content;
     private String subject;
 }

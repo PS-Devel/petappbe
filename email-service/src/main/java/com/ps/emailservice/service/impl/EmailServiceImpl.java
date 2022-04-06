@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -18,6 +20,9 @@ import java.io.UnsupportedEncodingException;
 
 @Service
 public class EmailServiceImpl implements EmailService {
+
+    @Setter(onMethod = @__({@Autowired}))
+    private SpringTemplateEngine springTemplateEngine;
 
     @Setter(onMethod = @__({@Autowired}))
     private JavaMailSender mailSender;
@@ -35,7 +40,10 @@ public class EmailServiceImpl implements EmailService {
         helper.setTo(composeDto.getTo());
         helper.setSubject(composeDto.getSubject());
 
-        helper.setText(composeDto.getContent(), true);
+        Context context = new Context();
+        context.setVariables(email.getProperties(petMessage));
+        String html = springTemplateEngine.process(email.getTemplate(), context);
+        helper.setText(html, true);
 
         mailSender.send(message);
     }
