@@ -53,7 +53,7 @@ public class UserController {
                 .body(AuthenticationResponseDtoConverter.toDto(currentUser.getId(), currentUser.getEmail(), currentUser.getUsername(), currentUser.getStringAuthorities()));
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public void create(CreateUserDto toCreate, HttpServletRequest request) {
         User createdUser = userService.createUser(toCreate);
 
