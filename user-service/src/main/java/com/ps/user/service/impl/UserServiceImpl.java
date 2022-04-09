@@ -1,12 +1,12 @@
 package com.ps.user.service.impl;
 
 import com.ps.user.dto.CreateUserDto;
+import com.ps.user.exception.UserAlreadyActivatedException;
 import com.ps.user.exception.UserAlreadyExistsException;
 import com.ps.user.exception.UserNotFoundException;
 import com.ps.user.model.User;
 import com.ps.user.repository.UserRepository;
 import com.ps.user.service.UserService;
-import io.jsonwebtoken.lang.Assert;
 import lombok.Setter;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,20 +38,21 @@ public class UserServiceImpl implements UserService {
 
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-
-        String randomCode = RandomString.make(64);
-        user.setVerificationCode(randomCode);
         user.setActiveUser(false);
+
+        setVerificationCode(user);
 
         return userRepository.save(user);
     }
 
     @Override
-    public String generateToken(String baseUrl, User user) {
-        Assert.hasText(baseUrl);
-        Assert.notNull(user.getId());
+    public void setVerificationCode(User user) {
+        if (user.isActiveUser()) {
+            throw new UserAlreadyActivatedException(user.getUsername());
+        }
 
-        return baseUrl + "/api/users/activate/token/" + user.getVerificationCode();
+        String randomCode = RandomString.make(64);
+        user.setVerificationCode(randomCode);
     }
 
     @Override
@@ -64,6 +65,23 @@ public class UserServiceImpl implements UserService {
         user.setVerificationCode(null);
 
         userRepository.save(user);
+    }
+
+    @Override
+    public User reinitializeActivationToken(String userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        User user = userOptional.get();
+
+        setVerificationCode(user);
+
+        userRepository.save(user);
+
+        return user;
     }
 
     private void checkUser(CreateUserDto toCreate) {
