@@ -40,7 +40,7 @@ public class CurrentUserImpl implements CurrentUser {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.getCustomUserDetails().getAuthorities();
     }
 
     @Override
