@@ -1,0 +1,36 @@
+version: "3.4"
+
+services:
+  serviceregistry:
+    build: ./service-registry
+    hostname: eureka
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+  configserver:
+    build: ./configserver
+    hostname: configserver
+    ports:
+      - "9296:9296"
+    links:
+      - serviceregistry
+    depends_on:
+      - serviceregistry
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+  apigateway:
+    build: ./api-gateway
+    hostname: apigateway
+    ports:
+      - "9191:9191"
+    links:
+      - serviceregistry
+      - configserver
+    depends_on:
+      - serviceregistry
+      - configserver
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://configserver:9296
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+    restart: always
