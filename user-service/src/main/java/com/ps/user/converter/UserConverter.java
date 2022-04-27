@@ -1,7 +1,10 @@
 package com.ps.user.converter;
 
 import com.ps.user.dto.CreateUserDto;
+import com.ps.user.model.Profile;
 import com.ps.user.model.User;
+
+import java.util.stream.Collectors;
 
 public class UserConverter {
 
@@ -10,8 +13,9 @@ public class UserConverter {
                 .username(toConvert.getUsername())
                 .email(toConvert.getEmail())
                 .password(toConvert.getPassword())
-                .isActiveUser(toConvert.isActiveUser())
-                .verificationCode(toConvert.getVerificationCode())
+                .profiles(toConvert.getProfiles().stream()
+                        .map(v -> Profile.builder().profile(v).build())
+                        .collect(Collectors.toSet()))
                 .build();
     }
 }
